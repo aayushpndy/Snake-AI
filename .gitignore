@@ -1,0 +1,15 @@
+# Virtual environment
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Trained AI models
+*.pth
+
+# IDE settings
+.vscode/
+.idea/
