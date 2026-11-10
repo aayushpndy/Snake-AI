@@ -40,7 +40,7 @@ Snake game/
 1. Clone this repository:
 
    ```bash
-   git clone YOUR_REPOSITORY_URL
+   https://github.com/aayushpndy/Snake-AI
    ```
 
 2. Navigate into the project folder:
