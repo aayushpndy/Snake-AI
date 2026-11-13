@@ -21,6 +21,8 @@ def train():
                 agent.model.save()
             agent.train_long_memory()
             agent.n_games+=1
+            if agent.n_games % 100 == 0:
+                agent.save_checkpoint()
             scores.append(score)
             mean_score = sum(scores[-100:]) / len(scores[-100:])
             print(f"Game: {agent.n_games}, Score: {score}, Record:{record}, Average: {mean_score:.2f}")

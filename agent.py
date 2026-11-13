@@ -13,10 +13,56 @@ class Agent:
         self.gamma = 0.9
         self.model = Linear_QNet(11, 256, 3)
          #neural network to brain
-        if os.path.exists('model.pth'):
-            self.model.load()
         self.trainer = QTrainer(self.model, lr=0.001, gamma=self.gamma)
+        self.checkpoint_dir = "checkpoints"
+        os.makedirs(self.checkpoint_dir, exist_ok=True)
         self.batch_size = 1000
+        self.load_checkpoint()
+
+    def save_checkpoint(self):
+        checkpoint = {
+        'model_state_dict': self.model.state_dict(),
+        'optimizer_state_dict': self.trainer.optimizer.state_dict(),
+        'n_games': self.n_games
+        }
+
+        file_path = os.path.join(
+        self.checkpoint_dir,
+        f"checkpoint_{self.n_games}.pth"
+        )
+
+        torch.save(checkpoint, file_path)
+        print(f"Checkpoint saved: {file_path}")
+
+    def load_checkpoint(self):
+        checkpoints = [
+        file for file in os.listdir(self.checkpoint_dir)
+        if file.endswith(".pth")
+        ]
+
+        if not checkpoints:
+            if os.path.exists("model.pth"):
+                self.model.load()
+                print("Loaded previous model weights. Starting new checkpoint history.")
+            else:
+                print("No checkpoint found. Starting fresh training.")
+            return
+
+        latest_checkpoint = max(
+            checkpoints,
+            key=lambda file: int(file.replace("checkpoint_", "").replace(".pth", ""))
+        )
+
+        file_path = os.path.join(self.checkpoint_dir, latest_checkpoint)
+
+        checkpoint = torch.load(file_path, weights_only=True)
+
+        self.model.load_state_dict(checkpoint['model_state_dict'])
+        self.trainer.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        self.n_games = checkpoint['n_games']
+
+        print(f"Resumed training from game {self.n_games}")
+    
     def get_state(self,game):
         state=game.get_state()
         return state
