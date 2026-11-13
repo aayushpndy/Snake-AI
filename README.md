@@ -25,6 +25,11 @@ The goal of this project is to develop an AI that learns how to play Snake throu
 
 ```text
 Snake game/
+├── visualization/
+│   ├── visualize_network.py
+│   └── snake_ai_architecture.png
+├── checkpoints/
+│   └── legacy/
 ├── agent.py
 ├── game.py
 ├── main.py
